@@ -16,7 +16,6 @@ public class Login {
     public String getPassword() {
         return password;
     }
-    //testdffd
 
     public void setPassword(String password) {
         this.password = password;
