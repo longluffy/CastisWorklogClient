@@ -107,6 +107,7 @@
     <Button
         android:layout_below="@+id/relativeLayout"
         android:text="Button"
+        android:background="@color/wallet_holo_blue_light"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
