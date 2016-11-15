@@ -6,7 +6,9 @@
             android:key="prefServer"
             android:summary="Set the Ciwls Server"
             android:title="Server Address"
-            android:textColor="?android:attr/textColorAlertDialogListItem" />
+            android:textColor="?android:attr/textColorAlertDialogListItem"
+            android:cursorVisible="true"
+            android:textCursorDrawable="@drawable/border" />
     </PreferenceCategory>
 
 </PreferenceScreen>
