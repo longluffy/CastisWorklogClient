@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 public class EditActivity extends AppCompatActivity {
     private static final String TAG = "EditActivity";
     String SAVE_URL = "/ciwls/user/";
-    //    public static final String DEFAULT_SERVER = "http://192.168.105.143:8080";
+//        public static final String DEFAULT_SERVER = "http://192.168.105.104:8080";
     public static final String DEFAULT_SERVER = "http://110.35.173.28:8886";
     SharedPreferences sharedPref;
     SharedPreferences.Editor sharedPrefEditor;
@@ -138,7 +138,6 @@ public class EditActivity extends AppCompatActivity {
 
                     SharedPreferences sharedPref = getSharedPreferences("TmsLoginState", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putInt("user_id", result.getId());
                     editor.putString("username", result.getUsername());
                     editor.putString("fullname", result.getFullname());
                     editor.putString("email", result.getEmail());
