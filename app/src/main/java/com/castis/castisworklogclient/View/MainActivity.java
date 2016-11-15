@@ -173,7 +173,7 @@ public class MainActivity extends AppCompatActivity
         boolean isCheckedIn = sharedPref.getBoolean("isCheckedIn", false);
 
         if (distanceToCompany > 1000000) {
-
+//tesst
             Toast.makeText(getBaseContext(), "Location is not Loaded .... wait a moment", Toast.LENGTH_LONG).show();
         } else if (isCheckedIn) {
             //nearby , Checkin
