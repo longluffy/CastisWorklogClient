@@ -58,7 +58,7 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit);
         ButterKnife.bind(this);
 
-        //aninmated   long
+        //aninmated   long test
         //initiate Android Shared preference
         sharedPref = getSharedPreferences("TmsLoginState", Context.MODE_PRIVATE);
         sharedPrefEditor = sharedPref.edit();
