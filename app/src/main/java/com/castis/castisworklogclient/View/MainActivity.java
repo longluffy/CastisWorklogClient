@@ -13,7 +13,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-//import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -57,6 +56,8 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+
+//import android.support.annotation.NonNull;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, LocationListener {
@@ -561,6 +562,29 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+public void onEditWorklog (View view){
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setTitle("Enter Worklog Summary");
 
+    final EditText input = new EditText(this);
+    input.setText(_workContentText.getText().toString());
+    input.setTextColor(getResources().getColor(R.color.black));
+    builder.setView(input);
+
+    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            _workContentText.setText(input.getText().toString());
+        }
+    });
+    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            dialog.cancel();
+        }
+    });
+
+    builder.show();
+    }
 
 }
