@@ -62,8 +62,9 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences.Editor sharedPrefEditor;
     public static final String CHECKIN_URL = "/ciwls/checkin";
     public static final String CHECKOUT_URL = "/ciwls/checkout";
-//        public static final String DEFAULT_SERVER = "http://192.168.105.143:8080";
+    //        public static final String DEFAULT_SERVER = "http://192.168.105.143:8080";
     public static final String DEFAULT_SERVER = "http://110.35.173.28:8886";
+    private static final int SETTINGS_RESULT = 1;
 
     DecimalFormat df = new DecimalFormat("#.##");
 
@@ -112,7 +113,6 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         } else {
-//            _greetingText.setText("Hi " + sharedPref.getString("username", "") + " ! ");
             Toast.makeText(getBaseContext(), "Create Account Success !! Loging in with UserName " + sharedPref.getString("username", ""), Toast.LENGTH_SHORT).show();
 
         }
@@ -173,10 +173,9 @@ public class MainActivity extends AppCompatActivity
         boolean isCheckedIn = sharedPref.getBoolean("isCheckedIn", false);
 
         if (distanceToCompany > 1000000) {
-//tesst
             Toast.makeText(getBaseContext(), "Location is not Loaded .... wait a moment", Toast.LENGTH_LONG).show();
         } else if (isCheckedIn) {
-            //nearby , Checkin
+            // Checked in
             CheckOut();
         } else {
             CheckIn();
@@ -207,7 +206,7 @@ public class MainActivity extends AppCompatActivity
     private class CheckOutAsyncTask extends AsyncTask<Worklog, Void, Worklog> {
         @Override
         protected Worklog doInBackground(Worklog... logoutDTO) {
-            return POST(sharedPref.getString("server", DEFAULT_SERVER) + CHECKOUT_URL, logoutDTO[0]);
+            return POST(sharedPref.getString("prefServer", DEFAULT_SERVER) + CHECKOUT_URL, logoutDTO[0]);
         }
 
         @Override
@@ -249,7 +248,7 @@ public class MainActivity extends AppCompatActivity
     private class CheckInAsyncTask extends AsyncTask<Worklog, Void, Worklog> {
         @Override
         protected Worklog doInBackground(Worklog... loginDTO) {
-            return POST(sharedPref.getString("server", DEFAULT_SERVER) + CHECKIN_URL, loginDTO[0]);
+            return POST(sharedPref.getString("prefServer", DEFAULT_SERVER) + CHECKIN_URL, loginDTO[0]);
         }
 
         // onPostExecute control the results of the AsyncTask.
@@ -424,7 +423,7 @@ public class MainActivity extends AppCompatActivity
                     }).addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
 
                         @Override
-                        public void onConnectionFailed( ConnectionResult connectionResult) {
+                        public void onConnectionFailed(ConnectionResult connectionResult) {
                             Toast.makeText(getBaseContext(), "Connection to Google API Failed", Toast.LENGTH_SHORT).show();
 
                         }
@@ -467,11 +466,23 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
 
         } else if (id == R.id.settings) {
-            Toast.makeText(this.getApplicationContext(), "this is for settings", Toast.LENGTH_SHORT).show();
+            Intent i = new Intent(getApplicationContext(), SettingActivity.class);
+            startActivityForResult(i, SETTINGS_RESULT);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SETTINGS_RESULT) {
+            Toast.makeText(this.getApplicationContext(), "Setting saved!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
 }
