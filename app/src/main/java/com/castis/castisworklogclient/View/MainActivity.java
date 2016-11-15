@@ -172,9 +172,9 @@ public class MainActivity extends AppCompatActivity
         double distanceToCompany = getDistance();
         boolean isCheckedIn = sharedPref.getBoolean("isCheckedIn", false);
 
-        if (distanceToCompany > 250) {
+        if (distanceToCompany > 1000000) {
 
-            Toast.makeText(getBaseContext(), "You're not nearby the office(" + df.format(distanceToCompany) + "m away)", Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), "Location is not Loaded .... wait a moment", Toast.LENGTH_LONG).show();
         } else if (isCheckedIn) {
             //nearby , Checkin
             CheckOut();
