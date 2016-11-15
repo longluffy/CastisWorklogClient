@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -30,11 +31,9 @@ public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
     SharedPreferences sharedPref;
     SharedPreferences.Editor sharedPrefEditor;
-//    String SIGNUP_URL = "http://192.168.105.104:8080/ciwls/signup";
+    //    String SIGNUP_URL = "http://192.168.105.104:8080/ciwls/signup";
     String SIGNUP_URL = "/ciwls/signup";
     public static final String DEFAULT_SERVER = "http://110.35.173.28:8886";
-
-
 
     Boolean isEmailFault = false;
 
@@ -59,8 +58,9 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
 
-        sharedPref = getSharedPreferences("TmsLoginState", Context.MODE_PRIVATE);
-        SharedPreferences.Editor sharedPrefEditor = sharedPref.edit();
+        sharedPref = PreferenceManager
+                .getDefaultSharedPreferences(SignupActivity.this);
+        sharedPrefEditor = sharedPref.edit();
 
 
         _signupButton.setOnClickListener(new View.OnClickListener() {
@@ -80,6 +80,7 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
     }
+
     ProgressDialog progressDialog = null;
 
     public void signup() {
@@ -114,16 +115,14 @@ public class SignupActivity extends AppCompatActivity {
     private class HttpAsyncTask extends AsyncTask<User, Void, User> {
         @Override
         protected User doInBackground(User... signupDTOs) {
-            return POST(sharedPref.getString("prefServer", DEFAULT_SERVER)+ SIGNUP_URL , signupDTOs[0]);
+            return POST(sharedPref.getString("prefServer", DEFAULT_SERVER) + SIGNUP_URL, signupDTOs[0]);
         }
 
         // onPostExecute control the results of the AsyncTask.
         @Override
         protected void onPostExecute(User result) {
             if (result != null) {
-                if (result.getStatus()==0) {
-                    System.out.println("signup oke");
-
+                if (result.getStatus() == 0) {
 
                     sharedPrefEditor.putInt("user_id", result.getId());
                     sharedPrefEditor.putString("username", result.getUsername());
@@ -136,13 +135,13 @@ public class SignupActivity extends AppCompatActivity {
 
                     onSignupSuccess();
 
-                } else if (result.getStatus()==1) {
+                } else if (result.getStatus() == 1) {
                     _usernameText.setError("Username already exists");
                     isEmailFault = false;
                     onSignupFailed();
                     return;
 
-                } else if (result.getStatus()==2) {
+                } else if (result.getStatus() == 2) {
                     _emailText.setError("Email already exists");
 
                     isEmailFault = true;
@@ -196,9 +195,9 @@ public class SignupActivity extends AppCompatActivity {
 
         _signupButton.setEnabled(true);
 
-        if (isEmailFault){
+        if (isEmailFault) {
             _emailText.requestFocus();
-        }else {
+        } else {
             _usernameText.requestFocus();
         }
     }

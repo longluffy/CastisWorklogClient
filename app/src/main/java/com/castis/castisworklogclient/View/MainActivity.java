@@ -115,7 +115,8 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //initiate Android Shared preference
-        sharedPref = getSharedPreferences("TmsLoginState", Context.MODE_PRIVATE);
+        sharedPref = PreferenceManager
+                .getDefaultSharedPreferences(this);
         sharedPrefEditor = sharedPref.edit();
 
         if (sharedPref.getString("prefServer", "").equals("")) {
@@ -173,7 +174,6 @@ public class MainActivity extends AppCompatActivity
                 onMyMapReady(googleMap);
             }
         });
-
 
 
         _submitCheckBtn.setOnClickListener(new View.OnClickListener() {
@@ -249,7 +249,6 @@ public class MainActivity extends AppCompatActivity
         }
         myMap.setMyLocationEnabled(true);
     }
-
 
 
     public void submitCheck() {
@@ -563,38 +562,33 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SETTINGS_RESULT) {
-            SharedPreferences defaultPref = PreferenceManager
-                    .getDefaultSharedPreferences(this);
-            sharedPrefEditor.putString("prefServer", defaultPref.getString("prefServer", DEFAULT_SERVER));
-            sharedPrefEditor.apply();
-
             Toast.makeText(this.getApplicationContext(), "Setting saved!", Toast.LENGTH_SHORT).show();
         }
     }
 
-public void onEditWorklog (View view){
-    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle("Enter Worklog Summary");
+    public void onEditWorklog(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Enter Worklog Summary");
 
-    final EditText input = new EditText(this);
-    input.setText(_workContentText.getText().toString());
-    input.setTextColor(getResources().getColor(R.color.black));
-    builder.setView(input);
+        final EditText input = new EditText(this);
+        input.setText(_workContentText.getText().toString());
+        input.setTextColor(getResources().getColor(R.color.black));
+        builder.setView(input);
 
-    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            _workContentText.setText(input.getText().toString());
-        }
-    });
-    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            dialog.cancel();
-        }
-    });
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                _workContentText.setText(input.getText().toString());
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
 
-    builder.show();
+        builder.show();
     }
 
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -52,6 +53,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        sharedPref = PreferenceManager
+                .getDefaultSharedPreferences(LoginActivity.this);
+        sharedPrefEditor = sharedPref.edit();
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
@@ -119,8 +123,6 @@ public class LoginActivity extends AppCompatActivity {
     private class HttpAsyncTask extends AsyncTask<Login, Void, User> {
         @Override
         protected User doInBackground(Login... loginDTO) {
-            sharedPref = getSharedPreferences("TmsLoginState", Context.MODE_PRIVATE);
-            sharedPrefEditor = sharedPref.edit();
             return POST(sharedPref.getString("prefServer", DEFAULT_SERVER) + loginUrl, loginDTO[0]);
         }
 
@@ -129,20 +131,19 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(User result) {
             if (result != null) {
                 if ((result.getStatus() == 0) || (result.getStatus() == 1)) {
-                    SharedPreferences sharedPref = getSharedPreferences("TmsLoginState", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putInt("user_id", result.getId());
-                    editor.putString("username", result.getUsername());
-                    editor.putString("fullname", result.getFullname());
-                    editor.putString("email", result.getEmail());
-                    editor.putString("team_name", result.getTeam().getTeam_name());
-                    editor.putBoolean("isLoggedIn", true);
+
+                    sharedPrefEditor.putInt("user_id", result.getId());
+                    sharedPrefEditor.putString("username", result.getUsername());
+                    sharedPrefEditor.putString("fullname", result.getFullname());
+                    sharedPrefEditor.putString("email", result.getEmail());
+                    sharedPrefEditor.putString("team_name", result.getTeam().getTeam_name());
+                    sharedPrefEditor.putBoolean("isLoggedIn", true);
                     if (result.getStatus() == 0)
-                        editor.putBoolean("isCheckedIn", false);
+                        sharedPrefEditor.putBoolean("isCheckedIn", false);
                     else
-                        editor.putBoolean("isCheckedIn", true);
-                    
-                    editor.apply();
+                        sharedPrefEditor.putBoolean("isCheckedIn", true);
+
+                    sharedPrefEditor.apply();
 
                     onLoginSuccess();
                 } else {
@@ -212,6 +213,11 @@ public class LoginActivity extends AppCompatActivity {
     public void onBackPressed() {
         // Disable going back to the MainActivity
         moveTaskToBack(true);
+    }
+
+    public void onSettingServer(View view) {
+        Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
+        startActivity(intent);
     }
 
 

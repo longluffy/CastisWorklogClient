@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -58,7 +59,8 @@ public class EditActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         //initiate Android Shared preference
-        sharedPref = getSharedPreferences("TmsLoginState", Context.MODE_PRIVATE);
+        sharedPref = PreferenceManager
+                .getDefaultSharedPreferences(EditActivity.this);
         sharedPrefEditor = sharedPref.edit();
 
         _nameText.setText(sharedPref.getString("fullname", ""));
