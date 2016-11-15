@@ -20,7 +20,8 @@
         <item name="colorButtonNormal">@color/primary_darker</item>
         <item name="android:colorButtonNormal">@color/primary_darker</item>
         <item name="android:textColorTertiary">@color/text</item>
-
+        <item name="android:editTextColor">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
 
     </style>
 

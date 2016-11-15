@@ -29,7 +29,7 @@ import butterknife.ButterKnife;
 public class EditActivity extends AppCompatActivity {
     private static final String TAG = "EditActivity";
     String SAVE_URL = "/ciwls/user/";
-//        public static final String DEFAULT_SERVER = "http://192.168.105.104:8080";
+    //        public static final String DEFAULT_SERVER = "http://192.168.105.104:8080";
     public static final String DEFAULT_SERVER = "http://110.35.173.28:8886";
     SharedPreferences sharedPref;
     SharedPreferences.Editor sharedPrefEditor;
