@@ -1,5 +1,6 @@
 package com.castis.castisworklogclient.View;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -38,6 +39,14 @@ import com.google.android.gms.identity.intents.Address;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -51,6 +60,9 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, LocationListener {
+
+    private GoogleMap myMap;
+    private ProgressDialog myProgress;
     private static final String TAG = "MainActivity";
     Location mLastLocation = null;
     Location mCurrentLocation = new Location("");
@@ -85,6 +97,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -135,6 +148,28 @@ public class MainActivity extends AppCompatActivity
             registerRequestUpdate(this);
         }
 
+        myProgress = new ProgressDialog(this);
+        myProgress.setTitle("Map Loading ...");
+        myProgress.setMessage("Please wait...");
+        myProgress.setCancelable(true);
+        // Display Progress Bar.
+        myProgress.show();
+
+
+        SupportMapFragment mapFragment
+                = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapView);
+
+        // Set callback listener, on Google Map ready.
+        mapFragment.getMapAsync(new OnMapReadyCallback() {
+
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+                onMyMapReady(googleMap);
+            }
+        });
+
+
+
         _submitCheckBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -164,11 +199,58 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    private void onMyMapReady(GoogleMap googleMap) {
+        // Get Google Map from Fragment.
+        myMap = googleMap;
+        // Sét OnMapLoadedCallback Listener.
+        myMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+
+            @Override
+            public void onMapLoaded() {
+                myProgress.dismiss();
+
+                if (mLastLocation != null) {
+
+                    LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+                    myMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 13));
+
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(latLng)             // focus map to current location
+                            .zoom(15)                   // zoom setting
+                            .bearing(90)                // Sets the orientation of the camera to
+                            .tilt(0)                   // Sets the tilt of the camera to 0 degrees
+                            .build();                   // Creates a CameraPosition from the builder
+                    myMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+
+                    // Add Marker to Map
+                    MarkerOptions option = new MarkerOptions();
+                    option.title("My Location");
+                    option.snippet("....");
+                    option.position(latLng);
+                    Marker currentMarker = myMap.addMarker(option);
+                    currentMarker.showInfoWindow();
+                } else {
+                    Toast.makeText(getBaseContext(), "Location not found!", Toast.LENGTH_LONG).show();
+                    Log.i("truong:", "Location not found");
+                }
+            }
+        });
+        myMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        myMap.getUiSettings().setZoomControlsEnabled(true);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        myMap.setMyLocationEnabled(true);
+    }
+
+
+
     public void submitCheck() {
         double distanceToCompany = getDistance();
         boolean isCheckedIn = sharedPref.getBoolean("isCheckedIn", false);
 
-        if (distanceToCompany > 1000000) {
+        if (distanceToCompany > 100000000) {
             Toast.makeText(getBaseContext(), "Location is not Loaded .... wait a moment", Toast.LENGTH_LONG).show();
         } else if (isCheckedIn) {
             // Checked in
@@ -226,7 +308,7 @@ public class MainActivity extends AppCompatActivity
 
         Worklog checkInDTO = new Worklog();
         checkInDTO.setId(sharedPref.getInt("user_id", -1));
-        checkInDTO.setLocation(mCurrentLocation.getLatitude() + "," + mCurrentLocation.getLongitude());
+        checkInDTO.setLocation(mLastLocation.getLatitude() + "," + mLastLocation.getLongitude());
         progressDialog = new ProgressDialog(MainActivity.this,
                 R.style.AppTheme_Dark_Dialog);
 
@@ -296,10 +378,10 @@ public class MainActivity extends AppCompatActivity
 
     public double getDistance() {
         Location companyPVI = new Location("");
-        companyPVI.setLatitude(21.0240667);
-        companyPVI.setLongitude(105.7867607);
+        companyPVI.setLatitude(25.434000);
+        companyPVI.setLongitude(94.619781);
 
-        return mCurrentLocation.distanceTo(companyPVI);
+        return mLastLocation.distanceTo(companyPVI);
 
 
     }
