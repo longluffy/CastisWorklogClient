@@ -5,7 +5,8 @@
         <EditTextPreference
             android:key="prefServer"
             android:summary="Set the Ciwls Server"
-            android:title="Server Address" />
+            android:title="Server Address"
+            android:textColor="?android:attr/textColorAlertDialogListItem" />
     </PreferenceCategory>
 
 </PreferenceScreen>
