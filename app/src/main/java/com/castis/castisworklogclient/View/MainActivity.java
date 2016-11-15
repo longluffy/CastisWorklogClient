@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity
                             })
                             .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    // do nothing - cobtinue to edit
+                                    // do nothing - continue to edit
                                 }
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)

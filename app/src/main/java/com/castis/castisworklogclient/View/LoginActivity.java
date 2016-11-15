@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     SharedPreferences.Editor sharedPrefEditor;
     String loginUrl = "/ciwls/login";
-//        public static final String DEFAULT_SERVER = "http://192.168.105.104:8080";
+    //        public static final String DEFAULT_SERVER = "http://192.168.105.104:8080";
     public static final String DEFAULT_SERVER = "http://110.35.173.28:8886";
 
 
@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(User result) {
             if (result != null) {
-                if (result.getStatus() == 0) {
+                if ((result.getStatus() == 0) || (result.getStatus() == 1)) {
                     SharedPreferences sharedPref = getSharedPreferences("TmsLoginState", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putInt("user_id", result.getId());
@@ -137,6 +137,11 @@ public class LoginActivity extends AppCompatActivity {
                     editor.putString("email", result.getEmail());
                     editor.putString("team_name", result.getTeam().getTeam_name());
                     editor.putBoolean("isLoggedIn", true);
+                    if (result.getStatus() == 0)
+                        editor.putBoolean("isCheckedIn", false);
+                    else
+                        editor.putBoolean("isCheckedIn", true);
+                    
                     editor.apply();
 
                     onLoginSuccess();
