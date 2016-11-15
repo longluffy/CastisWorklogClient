@@ -13,6 +13,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -116,6 +117,10 @@ public class MainActivity extends AppCompatActivity
         //initiate Android Shared preference
         sharedPref = getSharedPreferences("TmsLoginState", Context.MODE_PRIVATE);
         sharedPrefEditor = sharedPref.edit();
+
+        if (sharedPref.getString("prefServer", "").equals("")) {
+            sharedPrefEditor.putString("prefServer", DEFAULT_SERVER);
+        }
 
         //check logged in or not ?
         boolean islogged = sharedPref.getBoolean("isLoggedIn", false);
@@ -558,6 +563,11 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SETTINGS_RESULT) {
+            SharedPreferences defaultPref = PreferenceManager
+                    .getDefaultSharedPreferences(this);
+            sharedPrefEditor.putString("prefServer", defaultPref.getString("prefServer", DEFAULT_SERVER));
+            sharedPrefEditor.apply();
+
             Toast.makeText(this.getApplicationContext(), "Setting saved!", Toast.LENGTH_SHORT).show();
         }
     }
