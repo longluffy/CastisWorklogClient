@@ -28,8 +28,11 @@ import butterknife.ButterKnife;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
+    SharedPreferences sharedPref;
+    SharedPreferences.Editor sharedPrefEditor;
 //    String SIGNUP_URL = "http://192.168.105.104:8080/ciwls/signup";
-    String SIGNUP_URL = "http://110.35.173.28:8886/ciwls/signup";
+    String SIGNUP_URL = "/ciwls/signup";
+    public static final String DEFAULT_SERVER = "http://110.35.173.28:8886";
 
 
 
@@ -55,6 +58,10 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
+
+        sharedPref = getSharedPreferences("TmsLoginState", Context.MODE_PRIVATE);
+        SharedPreferences.Editor sharedPrefEditor = sharedPref.edit();
+
 
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +114,7 @@ public class SignupActivity extends AppCompatActivity {
     private class HttpAsyncTask extends AsyncTask<User, Void, User> {
         @Override
         protected User doInBackground(User... signupDTOs) {
-            return POST(SIGNUP_URL, signupDTOs[0]);
+            return POST(sharedPref.getString("prefServer", DEFAULT_SERVER)+ SIGNUP_URL , signupDTOs[0]);
         }
 
         // onPostExecute control the results of the AsyncTask.
@@ -117,19 +124,15 @@ public class SignupActivity extends AppCompatActivity {
                 if (result.getStatus()==0) {
                     System.out.println("signup oke");
 
-                    SharedPreferences sharedPref = getSharedPreferences("TmsLoginState", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putInt("user_id", result.getId());
-                    editor.putString("username", result.getUsername());
-                    editor.putBoolean("isLoggedIn", true);
-                    editor.putString("fullname", result.getFullname());
-                    editor.putString("email", result.getEmail());
-                    editor.putString("team_name", result.getTeam().getTeam_name());
-                    editor.putBoolean("isLoggedIn", true);
-                    editor.apply();
 
-
-                    editor.commit();
+                    sharedPrefEditor.putInt("user_id", result.getId());
+                    sharedPrefEditor.putString("username", result.getUsername());
+                    sharedPrefEditor.putBoolean("isLoggedIn", true);
+                    sharedPrefEditor.putString("fullname", result.getFullname());
+                    sharedPrefEditor.putString("email", result.getEmail());
+                    sharedPrefEditor.putString("team_name", result.getTeam().getTeam_name());
+                    sharedPrefEditor.putBoolean("isLoggedIn", true);
+                    sharedPrefEditor.apply();
 
                     onSignupSuccess();
 

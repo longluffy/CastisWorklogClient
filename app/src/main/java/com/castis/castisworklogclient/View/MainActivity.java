@@ -82,10 +82,6 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.workcontentText)
     EditText _workContentText;
 
-//    @Bind(R.id.greetingText)
-//    TextView _greetingText;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

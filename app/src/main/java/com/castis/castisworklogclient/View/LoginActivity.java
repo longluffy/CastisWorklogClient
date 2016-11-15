@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
         protected User doInBackground(Login... loginDTO) {
             sharedPref = getSharedPreferences("TmsLoginState", Context.MODE_PRIVATE);
             sharedPrefEditor = sharedPref.edit();
-            return POST(sharedPref.getString("server", DEFAULT_SERVER) + loginUrl, loginDTO[0]);
+            return POST(sharedPref.getString("prefServer", DEFAULT_SERVER) + loginUrl, loginDTO[0]);
         }
 
         // onPostExecute control the results of the AsyncTask.

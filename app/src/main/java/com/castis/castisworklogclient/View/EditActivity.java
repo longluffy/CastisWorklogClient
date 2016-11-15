@@ -57,7 +57,6 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit);
         ButterKnife.bind(this);
 
-        //aninmated   long test
         //initiate Android Shared preference
         sharedPref = getSharedPreferences("TmsLoginState", Context.MODE_PRIVATE);
         sharedPrefEditor = sharedPref.edit();
@@ -104,14 +103,12 @@ public class EditActivity extends AppCompatActivity {
 
         _signupButton.setEnabled(false);
 
-
-        // TODO: Implement your own signup logic here.
-
         User signupDTO = new User();
         signupDTO.setId(sharedPref.getInt("user_id", 0));
         signupDTO.setFullname(_nameText.getText().toString());
         signupDTO.setEmail(_emailText.getText().toString().trim());
         signupDTO.setUsername(_usernameText.getText().toString().trim());
+
         if (_passwordText.getText().toString().trim().equals("")) {
             signupDTO.setPassword(sharedPref.getString("password", "castis"));
         } else {
@@ -126,7 +123,7 @@ public class EditActivity extends AppCompatActivity {
     private class HttpAsyncTask extends AsyncTask<User, Void, User> {
         @Override
         protected User doInBackground(User... signupDTOs) {
-            return POST(DEFAULT_SERVER + SAVE_URL + sharedPref.getInt("user_id", 0), signupDTOs[0]);
+            return POST(sharedPref.getString("prefServer", DEFAULT_SERVER) + SAVE_URL + sharedPref.getInt("user_id", 0), signupDTOs[0]);
         }
 
         // onPostExecute control the results of the AsyncTask.
@@ -134,17 +131,11 @@ public class EditActivity extends AppCompatActivity {
         protected void onPostExecute(User result) {
             if (result != null) {
                 if (result.getStatus() == 0) {
-                    System.out.println(" oke");
 
-                    SharedPreferences sharedPref = getSharedPreferences("TmsLoginState", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPref.edit();
-                    editor.putString("username", result.getUsername());
-                    editor.putString("fullname", result.getFullname());
-                    editor.putString("email", result.getEmail());
-//                    editor.putString("team_name", result.getTeam().getTeam_name());
-                    editor.putBoolean("isLoggedIn", true);
-                    editor.commit();
-
+                    sharedPrefEditor.putString("username", result.getUsername());
+                    sharedPrefEditor.putString("fullname", result.getFullname());
+                    sharedPrefEditor.putString("email", result.getEmail());
+                    sharedPrefEditor.commit();
                     onSignupSuccess();
 
                 } else if (result.getStatus() == 1) {
