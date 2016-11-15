@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity
         double distanceToCompany = getDistance();
         boolean isCheckedIn = sharedPref.getBoolean("isCheckedIn", false);
 
-        if (distanceToCompany > 100000000) {
+        if (distanceToCompany > 10000000) {
             Toast.makeText(getBaseContext(), "Location is not Loaded .... wait a moment", Toast.LENGTH_LONG).show();
         } else if (isCheckedIn) {
             // Checked in
@@ -378,8 +378,8 @@ public class MainActivity extends AppCompatActivity
 
     public double getDistance() {
         Location companyPVI = new Location("");
-        companyPVI.setLatitude(25.434000);
-        companyPVI.setLongitude(94.619781);
+        companyPVI.setLatitude(21.0244025);
+        companyPVI.setLongitude(105.7883985);
 
         return mLastLocation.distanceTo(companyPVI);
 
