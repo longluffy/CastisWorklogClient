@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
-//    String SIGNUP_URL = "http://192.168.105.143:8080/ciwls/signup";
+//    String SIGNUP_URL = "http://192.168.105.104:8080/ciwls/signup";
     String SIGNUP_URL = "http://110.35.173.28:8886/ciwls/signup";
 
 

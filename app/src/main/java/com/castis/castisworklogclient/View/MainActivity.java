@@ -12,7 +12,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
+//import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences.Editor sharedPrefEditor;
     public static final String CHECKIN_URL = "/ciwls/checkin";
     public static final String CHECKOUT_URL = "/ciwls/checkout";
-    //    public static final String DEFAULT_SERVER = "http://192.168.105.143:8080";
+//        public static final String DEFAULT_SERVER = "http://192.168.105.143:8080";
     public static final String DEFAULT_SERVER = "http://110.35.173.28:8886";
 
     DecimalFormat df = new DecimalFormat("#.##");
@@ -424,7 +424,7 @@ public class MainActivity extends AppCompatActivity
                     }).addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
 
                         @Override
-                        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        public void onConnectionFailed( ConnectionResult connectionResult) {
                             Toast.makeText(getBaseContext(), "Connection to Google API Failed", Toast.LENGTH_SHORT).show();
 
                         }

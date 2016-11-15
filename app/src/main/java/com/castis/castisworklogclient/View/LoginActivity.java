@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     SharedPreferences sharedPref;
     SharedPreferences.Editor sharedPrefEditor;
     String loginUrl = "/ciwls/login";
-    //    public static final String DEFAULT_SERVER = "http://192.168.105.143:8080";
+//        public static final String DEFAULT_SERVER = "http://192.168.105.104:8080";
     public static final String DEFAULT_SERVER = "http://110.35.173.28:8886";
 
 
