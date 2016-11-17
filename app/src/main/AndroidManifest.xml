@@ -40,7 +40,7 @@
             android:label="@string/title_activity_edit"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".View.SettingActivity"
+            android:name=".setting.SettingActivity"
             android:label="@string/action_settings"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

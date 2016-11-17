@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.castis.castisworklogclient.Presenter.HttpHandler;
 import com.castis.castisworklogclient.R;
 import com.castis.castisworklogclient.model.Worklog;
+import com.castis.castisworklogclient.setting.SettingActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;

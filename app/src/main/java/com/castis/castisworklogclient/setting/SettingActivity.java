@@ -1,4 +1,4 @@
-package com.castis.castisworklogclient.View;
+package com.castis.castisworklogclient.setting;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;

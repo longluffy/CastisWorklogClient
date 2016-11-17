@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.castis.castisworklogclient.Presenter.HttpHandler;
 import com.castis.castisworklogclient.R;
 import com.castis.castisworklogclient.model.User;
+import com.castis.castisworklogclient.setting.SettingActivity;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
