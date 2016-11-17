@@ -66,7 +66,6 @@ public class MainActivity extends AppCompatActivity
     private ProgressDialog myProgress;
     private static final String TAG = "MainActivity";
     Location mLastLocation = null;
-    Location mCurrentLocation = new Location("");
     private double fusedLatitude = 0.0;
     private double fusedLongitude = 0.0;
     private GoogleApiClient mGoogleApiClient;
@@ -264,7 +263,7 @@ public void onSummit(View view){
     private void CheckOut() {
         Worklog checkOutDTO = new Worklog();
         checkOutDTO.setId(sharedPref.getInt("user_id", -1));
-        checkOutDTO.setLocation(mCurrentLocation.getLatitude() + "," + mCurrentLocation.getLongitude());
+        checkOutDTO.setLocation(mLastLocation.getLatitude() + "," + mLastLocation.getLongitude());
         checkOutDTO.setWorkSummary(_workContentText.getText().toString());
         progressDialog = new ProgressDialog(MainActivity.this,
                 R.style.AppTheme_Dark_Dialog);
@@ -446,7 +445,7 @@ public void onSummit(View view){
     public void onLocationChanged(Location location) {
         setFusedLatitude(location.getLatitude());
         setFusedLongitude(location.getLongitude());
-        mCurrentLocation = location;
+        mLastLocation = location;
         _locationText.setText(getFusedLatitude() + "," + getFusedLongitude());
 
         List<Address> addresses = null;
