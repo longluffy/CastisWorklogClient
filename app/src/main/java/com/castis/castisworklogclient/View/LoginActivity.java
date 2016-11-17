@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.castis.castisworklogclient.Presenter.HttpHandler;
 import com.castis.castisworklogclient.R;
-import com.castis.castisworklogclient.model.Login;
 import com.castis.castisworklogclient.model.User;
 import com.google.gson.Gson;
 
@@ -96,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
 
-        Login logindto = new Login();
+        User logindto = new User();
         logindto.setUsername(_usernameText.getText().toString());
         logindto.setPassword(_passwordText.getText().toString());
 
@@ -105,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    public static User POST(String url, Login person) {
+    public static User POST(String url, User person) {
         InputStream inputStream;
         User parsedResult = null;
         try {
@@ -120,9 +119,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    private class HttpAsyncTask extends AsyncTask<Login, Void, User> {
+    private class HttpAsyncTask extends AsyncTask<User, Void, User> {
         @Override
-        protected User doInBackground(Login... loginDTO) {
+        protected User doInBackground(User... loginDTO) {
             return POST(sharedPref.getString("prefServer", DEFAULT_SERVER) + loginUrl, loginDTO[0]);
         }
 
