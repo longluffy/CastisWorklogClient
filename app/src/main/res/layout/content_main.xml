@@ -52,7 +52,9 @@
         android:includeFontPadding="true"
         android:elegantTextHeight="false"
         android:layout_height="130dp"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        android:cursorVisible="true"
+        android:textCursorDrawable="@drawable/border" />
     <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_below="@+id/workcontentText"
