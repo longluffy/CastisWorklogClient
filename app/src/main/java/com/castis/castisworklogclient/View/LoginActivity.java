@@ -136,7 +136,6 @@ public class LoginActivity extends AppCompatActivity {
                     sharedPrefEditor.putString("username", result.getUsername());
                     sharedPrefEditor.putString("fullname", result.getFullname());
                     sharedPrefEditor.putString("email", result.getEmail());
-                    sharedPrefEditor.putString("team_name", result.getTeam().getTeam_name());
                     sharedPrefEditor.putBoolean("isLoggedIn", true);
                     if (result.getStatus() == 0)
                         sharedPrefEditor.putBoolean("isCheckedIn", false);
