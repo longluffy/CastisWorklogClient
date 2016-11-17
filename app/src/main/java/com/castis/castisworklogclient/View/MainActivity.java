@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         } else {
-            Toast.makeText(getBaseContext(), "Create Account Success !! Loging in with UserName " + sharedPref.getString("username", ""), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), "Loging in with UserName " + sharedPref.getString("username", ""), Toast.LENGTH_SHORT).show();
 
         }
 
