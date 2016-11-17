@@ -176,27 +176,28 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-public void onSummit(View view){
-    if (_workContentText.getText().toString().equals("") && sharedPref.getBoolean("isCheckedIn", false) == true) {
-        new AlertDialog.Builder(MainActivity.this)
-                .setTitle("Empty Work Contents")
-                .setMessage("Your work contents is empty , Are you sure you want to Checkout?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        submitCheck();
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing - continue to edit
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-    } else {
-        submitCheck();
+    public void onCheckOutSubmit(View view) {
+        if (_workContentText.getText().toString().equals("") && sharedPref.getBoolean("isCheckedIn", false) == true) {
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("Empty Work Contents")
+                    .setMessage("Your work contents is empty , Are you sure you want to Checkout?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            submitCheck();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing - continue to edit
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        } else {
+            submitCheck();
+        }
     }
-}
+
     private void onMyMapReady(GoogleMap googleMap) {
         // Get Google Map from Fragment.
         myMap = googleMap;

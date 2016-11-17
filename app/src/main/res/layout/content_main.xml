@@ -116,5 +116,5 @@
         android:layout_centerHorizontal="true"
         android:id="@+id/checkBtn"
         android:textColor="@color/colorPrimaryDark"
-        android:onClick="onSummit"/>
+        android:onClick="onCheckOutSubmit"/>
 </RelativeLayout>
