@@ -123,13 +123,11 @@ public class SignupActivity extends AppCompatActivity {
         protected void onPostExecute(User result) {
             if (result != null) {
                 if (result.getStatus() == 0) {
-
                     sharedPrefEditor.putInt("user_id", result.getId());
                     sharedPrefEditor.putString("username", result.getUsername());
                     sharedPrefEditor.putBoolean("isLoggedIn", true);
                     sharedPrefEditor.putString("fullname", result.getFullname());
                     sharedPrefEditor.putString("email", result.getEmail());
-                    sharedPrefEditor.putString("team_name", result.getTeam().getTeam_name());
                     sharedPrefEditor.putBoolean("isLoggedIn", true);
                     sharedPrefEditor.apply();
 
