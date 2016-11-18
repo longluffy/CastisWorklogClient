@@ -223,13 +223,10 @@ public class MainActivity extends AppCompatActivity
         progressDialog.setMessage("Connecting...");
         progressDialog.show();
 
-//        new CheckInAsyncTask().execute(checkInDTO);
-
         String jsonMessage = gsonParser.toJson(checkInDTO);
         new SendDatatoServer(this).execute(String.valueOf(jsonMessage), sharedPref.getString("prefServer", DEFAULT_SERVER) + CHECKIN_URL);
 
     }
-
 
 
     public void onCheckOut(View view) {
@@ -244,9 +241,6 @@ public class MainActivity extends AppCompatActivity
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Connecting...");
         progressDialog.show();
-
-//        new CheckInAsyncTask().execute(checkInDTO);
-
         String jsonMessage = gsonParser.toJson(checkOutDTO);
         new SendDatatoServer(this).execute(String.valueOf(jsonMessage), sharedPref.getString("prefServer", DEFAULT_SERVER) + CHECKOUT_URL);
     }

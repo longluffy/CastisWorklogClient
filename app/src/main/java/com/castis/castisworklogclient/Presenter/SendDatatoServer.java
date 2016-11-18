@@ -20,7 +20,7 @@ import java.net.URL;
  */
 
 public class SendDatatoServer extends AsyncTask<String, String, String> {
-    static String JsonResponse = null;
+    static String JsonResponse = "";
 
     private static final String TAG = SendDatatoServer.class.getSimpleName();
 
