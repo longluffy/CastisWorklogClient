@@ -15,60 +15,52 @@
 
 
     <fragment
-        android:layout_width="wrap_content"
-        android:layout_height="250dp"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:id="@+id/mapView"
-        android:layout_alignParentRight="true"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
 
     <EditText
-        android:onClick="onEditWorklog"
-        android:layout_below="@+id/mapView"
         android:id="@+id/workcontentText"
         style="@android:style/Widget.DeviceDefault.EditText"
         android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_below="@+id/mapView"
+        android:layout_marginTop="8dp"
         android:background="@color/white"
+        android:cursorVisible="true"
+        android:elegantTextHeight="false"
         android:ems="10"
         android:fontFamily="sans-serif"
+        android:gravity="top"
+        android:hapticFeedbackEnabled="true"
+        android:hint="Work contents"
+        android:includeFontPadding="true"
         android:inputType="textMultiLine"
         android:lines="15"
+        android:linksClickable="true"
+        android:longClickable="true"
         android:nestedScrollingEnabled="true"
+        android:onClick="onEditWorklog"
         android:selectAllOnFocus="true"
+        android:textAlignment="viewStart"
         android:textAllCaps="false"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textColor="@android:color/black"
+        android:textCursorDrawable="@drawable/border"
         android:textSize="18sp"
-        android:typeface="normal"
-        android:textAlignment="viewStart"
-        android:gravity="top"
-        android:hapticFeedbackEnabled="true"
-        android:longClickable="true"
-        android:linksClickable="true"
-        android:hint="Work contents"
-        android:includeFontPadding="true"
-        android:elegantTextHeight="false"
-        android:layout_height="130dp"
-        android:layout_marginTop="8dp"
-        android:cursorVisible="true"
-        android:textCursorDrawable="@drawable/border" />
+        android:typeface="normal" />
+
     <RelativeLayout
         android:id="@+id/relativeLayout"
-        android:layout_below="@+id/workcontentText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/distanceLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:text="Distance to work" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/workcontentText">
 
         <TextView
             android:id="@+id/locationLabel"
@@ -92,29 +84,31 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
             android:textColor="@color/text" />
 
-        <TextView
-            android:id="@+id/distanceText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/locationText"
-            android:layout_alignBottom="@+id/locationText"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_weight="1"
-            android:text=""
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:textColor="@color/text" />
 
     </RelativeLayout>
 
     <Button
-        android:layout_below="@+id/relativeLayout"
-        android:text="Button"
-        android:background="@color/wallet_holo_blue_light"
+        android:text="Checkin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/checkBtn"
-        android:textColor="@color/colorPrimaryDark"
-        android:onClick="onSummit"/>
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="50dp"
+        android:layout_marginStart="50dp"
+        android:id="@+id/btnCheckin"
+        android:onClick="onCheckIn"/>
+
+    <Button
+        android:text="Checkout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="50dp"
+        android:layout_marginEnd="50dp"
+        android:id="@+id/btnCheckout"
+        android:onClick="onCheckOut"/>
+
 </RelativeLayout>

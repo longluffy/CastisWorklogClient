@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -28,7 +27,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.castis.castisworklogclient.Presenter.HttpHandler;
+import com.castis.castisworklogclient.Presenter.SendDatatoServer;
 import com.castis.castisworklogclient.R;
 import com.castis.castisworklogclient.model.Worklog;
 import com.castis.castisworklogclient.setting.SettingActivity;
@@ -49,20 +48,17 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-//import android.support.annotation.NonNull;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, LocationListener {
-
+        implements NavigationView.OnNavigationItemSelectedListener, LocationListener, SendDatatoServer.AsyncResponse {
+    Gson gsonParser = new Gson();
+    ProgressDialog progressDialog = null;
     private GoogleMap myMap;
     private ProgressDialog myProgress;
     private static final String TAG = "MainActivity";
@@ -75,7 +71,6 @@ public class MainActivity extends AppCompatActivity
     SharedPreferences.Editor sharedPrefEditor;
     public static final String CHECKIN_URL = "/ciwls/checkin";
     public static final String CHECKOUT_URL = "/ciwls/checkout";
-    //        public static final String DEFAULT_SERVER = "http://192.168.105.143:8080";
     public static final String DEFAULT_SERVER = "http://110.35.173.28:8886";
     private static final int SETTINGS_RESULT = 1;
 
@@ -85,11 +80,11 @@ public class MainActivity extends AppCompatActivity
     @Bind(R.id.locationText)
     TextView _locationText;
 
-    @Bind(R.id.distanceText)
-    TextView _distanceText;
+    @Bind(R.id.btnCheckin)
+    Button btnCheckin;
 
-    @Bind(R.id.checkBtn)
-    Button _submitCheckBtn;
+    @Bind(R.id.btnCheckout)
+    Button btnCheckout;
 
 
     @Bind(R.id.workcontentText)
@@ -132,14 +127,6 @@ public class MainActivity extends AppCompatActivity
 
         }
 
-        //check is checkin or not?
-        boolean isCheckedIn = sharedPref.getBoolean("isCheckedIn", false);
-        if (!isCheckedIn)
-            _submitCheckBtn.setText("CheckIN");
-        else
-            _submitCheckBtn.setText("CheckOUT");
-
-
         //check permission to get Location
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -176,27 +163,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-public void onSummit(View view){
-    if (_workContentText.getText().toString().equals("") && sharedPref.getBoolean("isCheckedIn", false) == true) {
-        new AlertDialog.Builder(MainActivity.this)
-                .setTitle("Empty Work Contents")
-                .setMessage("Your work contents is empty , Are you sure you want to Checkout?")
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        submitCheck();
-                    }
-                })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // do nothing - continue to edit
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
-    } else {
-        submitCheck();
-    }
-}
     private void onMyMapReady(GoogleMap googleMap) {
         // Get Google Map from Fragment.
         myMap = googleMap;
@@ -243,65 +209,7 @@ public void onSummit(View view){
     }
 
 
-    public void submitCheck() {
-        double distanceToCompany = getDistance();
-        boolean isCheckedIn = sharedPref.getBoolean("isCheckedIn", false);
-
-        if (distanceToCompany > 10000000) {
-            Toast.makeText(getBaseContext(), "Location is not Loaded .... wait a moment", Toast.LENGTH_LONG).show();
-        } else if (isCheckedIn) {
-            // Checked in
-            CheckOut();
-        } else {
-            CheckIn();
-        }
-
-    }
-
-
-    ProgressDialog progressDialog = null;
-
-    private void CheckOut() {
-        Worklog checkOutDTO = new Worklog();
-        checkOutDTO.setId(sharedPref.getInt("user_id", -1));
-        checkOutDTO.setLocation(mLastLocation.getLatitude() + "," + mLastLocation.getLongitude());
-        checkOutDTO.setWorkSummary(_workContentText.getText().toString());
-        progressDialog = new ProgressDialog(MainActivity.this,
-                R.style.AppTheme_Dark_Dialog);
-
-        Log.d(TAG, "Checkin");
-
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Connecting...");
-        progressDialog.show();
-
-        new CheckOutAsyncTask().execute(checkOutDTO);
-    }
-
-    private class CheckOutAsyncTask extends AsyncTask<Worklog, Void, Worklog> {
-        @Override
-        protected Worklog doInBackground(Worklog... logoutDTO) {
-            return POST(sharedPref.getString("prefServer", DEFAULT_SERVER) + CHECKOUT_URL, logoutDTO[0]);
-        }
-
-        @Override
-        protected void onPostExecute(Worklog checkOutResult) {
-            progressDialog.dismiss();
-
-            if (null == checkOutResult || (checkOutResult.getResult() != 0)) {
-                //Checkout Fail
-                Toast.makeText(getBaseContext(), "CheckOut Failed", Toast.LENGTH_LONG).show();
-            } else {
-                //Checkout success
-                sharedPrefEditor.putBoolean("isCheckedIn", false);
-                sharedPrefEditor.apply();
-                _submitCheckBtn.setText("CheckIN");
-                Toast.makeText(getBaseContext(), "CheckOut Success", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    private void CheckIn() {
+    public void onCheckIn(View view) {
 
         Worklog checkInDTO = new Worklog();
         checkInDTO.setId(sharedPref.getInt("user_id", -1));
@@ -315,73 +223,54 @@ public void onSummit(View view){
         progressDialog.setMessage("Connecting...");
         progressDialog.show();
 
-        new CheckInAsyncTask().execute(checkInDTO);
+//        new CheckInAsyncTask().execute(checkInDTO);
 
+        String jsonMessage = gsonParser.toJson(checkInDTO);
+        new SendDatatoServer(this).execute(String.valueOf(jsonMessage), sharedPref.getString("prefServer", DEFAULT_SERVER) + CHECKIN_URL);
 
     }
 
-    private class CheckInAsyncTask extends AsyncTask<Worklog, Void, Worklog> {
-        @Override
-        protected Worklog doInBackground(Worklog... loginDTO) {
-            return POST(sharedPref.getString("prefServer", DEFAULT_SERVER) + CHECKIN_URL, loginDTO[0]);
+
+
+    public void onCheckOut(View view) {
+        Worklog checkOutDTO = new Worklog();
+        checkOutDTO.setId(sharedPref.getInt("user_id", -1));
+        checkOutDTO.setLocation(mLastLocation.getLatitude() + "," + mLastLocation.getLongitude());
+        progressDialog = new ProgressDialog(MainActivity.this,
+                R.style.AppTheme_Dark_Dialog);
+
+        Log.d(TAG, "Checkin");
+
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Connecting...");
+        progressDialog.show();
+
+//        new CheckInAsyncTask().execute(checkInDTO);
+
+        String jsonMessage = gsonParser.toJson(checkOutDTO);
+        new SendDatatoServer(this).execute(String.valueOf(jsonMessage), sharedPref.getString("prefServer", DEFAULT_SERVER) + CHECKOUT_URL);
+    }
+
+
+    @Override
+    public void ServerResponse(String output) {
+        Log.i("Server response: ", output);
+        progressDialog.dismiss();
+        Worklog worklogResponse = gsonParser.fromJson(output, Worklog.class);
+
+        if (null != worklogResponse && worklogResponse.getResult() == 0) {
+            //Checkin success
+            sharedPrefEditor.putBoolean("isCheckedIn", true);
+            sharedPrefEditor.putString("LastCheckinLocation", worklogResponse.getLocation());
+            sharedPrefEditor.apply();
+            Toast.makeText(getBaseContext(), "Success", Toast.LENGTH_LONG).show();
+
+        } else {
+            //Checkin Fail
+            Toast.makeText(getBaseContext(), "Failed", Toast.LENGTH_LONG).show();
         }
-
-        // onPostExecute control the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(Worklog checkInResult) {
-            progressDialog.dismiss();
-
-            if (null != checkInResult && checkInResult.getResult() == 0) {
-                //Checkin success
-                sharedPrefEditor.putBoolean("isCheckedIn", true);
-                sharedPrefEditor.putString("LastCheckinLocation", checkInResult.getLocation());
-                sharedPrefEditor.apply();
-
-                _submitCheckBtn.setText("CheckOUT");
-                Toast.makeText(getBaseContext(), "Checkin Success", Toast.LENGTH_LONG).show();
-
-            } else {
-                //Checkin Fail
-                Toast.makeText(getBaseContext(), "Checkin Failed", Toast.LENGTH_LONG).show();
-            }
-        }
     }
 
-
-    public Worklog POST(String url, Worklog person) {
-        InputStream inputStream;
-        Worklog parsedResult = null;
-        try {
-            HttpHandler httpHandler = new HttpHandler();
-            inputStream = httpHandler.requestAPI(url, person);
-
-            // convert inputstream to LoginDTO
-            parsedResult = convertInputStreamToDTO(inputStream);
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-        return parsedResult;
-    }
-
-
-    private Worklog convertInputStreamToDTO(InputStream inputStream) {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-
-        Gson gsonParser = new Gson();
-        Worklog parsedDTO = gsonParser.fromJson(bufferedReader, Worklog.class);
-
-        return parsedDTO;
-    }
-
-    public double getDistance() {
-        Location companyPVI = new Location("");
-        companyPVI.setLatitude(21.0244025);
-        companyPVI.setLongitude(105.7883985);
-
-        return mLastLocation.distanceTo(companyPVI);
-
-
-    }
 
     public void registerRequestUpdate(final LocationListener listener) {
         mLocationRequest = LocationRequest.create();
@@ -450,8 +339,6 @@ public void onSummit(View view){
         _locationText.setText(getFusedLatitude() + "," + getFusedLongitude());
 
         List<Address> addresses = null;
-
-        _distanceText.setText(String.valueOf(df.format(getDistance())));
 
     }
 

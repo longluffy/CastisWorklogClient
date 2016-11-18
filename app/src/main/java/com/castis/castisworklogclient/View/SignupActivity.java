@@ -1,10 +1,8 @@
 package com.castis.castisworklogclient.View;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,19 +13,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.castis.castisworklogclient.Presenter.HttpHandler;
+import com.castis.castisworklogclient.Presenter.SendDatatoServer;
 import com.castis.castisworklogclient.R;
 import com.castis.castisworklogclient.model.User;
 import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class SignupActivity extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity implements SendDatatoServer.AsyncResponse{
+    Gson gsonParser = new Gson();
     private static final String TAG = "SignupActivity";
     SharedPreferences sharedPref;
     SharedPreferences.Editor sharedPrefEditor;
@@ -88,7 +83,6 @@ public class SignupActivity extends AppCompatActivity {
 
         if (!validate()) {
             onSignupFailed();
-            return;
         }
 
         _signupButton.setEnabled(false);
@@ -107,74 +101,12 @@ public class SignupActivity extends AppCompatActivity {
         signupDTO.setUsername(_usernameText.getText().toString());
         signupDTO.setPassword(_passwordText.getText().toString());
 
-        new HttpAsyncTask().execute(signupDTO);
+//        new HttpAsyncTask().execute(signupDTO);
 
+
+        String jsonMessage = gsonParser.toJson(signupDTO);
+        new SendDatatoServer(this).execute(String.valueOf(jsonMessage), sharedPref.getString("prefServer", DEFAULT_SERVER) + SIGNUP_URL);
     }
-
-
-    private class HttpAsyncTask extends AsyncTask<User, Void, User> {
-        @Override
-        protected User doInBackground(User... signupDTOs) {
-            return POST(sharedPref.getString("prefServer", DEFAULT_SERVER) + SIGNUP_URL, signupDTOs[0]);
-        }
-
-        // onPostExecute control the results of the AsyncTask.
-        @Override
-        protected void onPostExecute(User result) {
-            if (result != null) {
-                if (result.getStatus() == 0) {
-                    sharedPrefEditor.putInt("user_id", result.getId());
-                    sharedPrefEditor.putString("username", result.getUsername());
-                    sharedPrefEditor.putBoolean("isLoggedIn", true);
-                    sharedPrefEditor.putString("fullname", result.getFullname());
-                    sharedPrefEditor.putString("email", result.getEmail());
-                    sharedPrefEditor.putBoolean("isLoggedIn", true);
-                    sharedPrefEditor.apply();
-
-                    onSignupSuccess();
-
-                } else if (result.getStatus() == 1) {
-                    _usernameText.setError("Username already exists");
-                    isEmailFault = false;
-                    onSignupFailed();
-                    return;
-
-                } else if (result.getStatus() == 2) {
-                    _emailText.setError("Email already exists");
-
-                    isEmailFault = true;
-                    onSignupFailed();
-                    return;
-
-                }
-            } else {
-                Toast.makeText(getBaseContext(), "Cannot connect to Server ", Toast.LENGTH_LONG).show();
-                onSignupFailed();
-                return;
-            }
-        }
-    }
-
-
-    public static User POST(String url, User person) {
-        Gson gsonParser = new Gson();
-        InputStream inputStream = null;
-        User parsedResult = null;
-        try {
-            HttpHandler httpHandler = new HttpHandler();
-            inputStream = httpHandler.requestAPI(url, person);
-            // convert inputstream to Signup
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            parsedResult = gsonParser.fromJson(bufferedReader, User.class);
-            inputStream.close();
-
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-
-        return parsedResult;
-    }
-
 
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
@@ -255,5 +187,38 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         return valid;
+    }
+    @Override
+    public void ServerResponse(String result) {
+        Log.i("Server response: ", result);
+        User userResponse = gsonParser.fromJson(result, User.class);
+        if (result != null) {
+            if (userResponse.getStatus() == 0) {
+                sharedPrefEditor.putInt("user_id", userResponse.getId());
+                sharedPrefEditor.putString("username", userResponse.getUsername());
+                sharedPrefEditor.putBoolean("isLoggedIn", true);
+                sharedPrefEditor.putString("fullname", userResponse.getFullname());
+                sharedPrefEditor.putString("email", userResponse.getEmail());
+                sharedPrefEditor.putBoolean("isLoggedIn", true);
+                sharedPrefEditor.apply();
+
+                onSignupSuccess();
+
+            } else if (userResponse.getStatus() == 1) {
+                _usernameText.setError("Username already exists");
+                isEmailFault = false;
+                onSignupFailed();
+
+            } else if (userResponse.getStatus() == 2) {
+                _emailText.setError("Email already exists");
+
+                isEmailFault = true;
+                onSignupFailed();
+
+            }
+        } else {
+            Toast.makeText(getBaseContext(), "Cannot connect to Server ", Toast.LENGTH_LONG).show();
+            onSignupFailed();
+        }
     }
 }

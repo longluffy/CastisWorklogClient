@@ -13,6 +13,4 @@ public class SettingActivity extends PreferenceActivity {
         // add the xml resource
         addPreferencesFromResource(R.xml.ciwls_setting);
     }
-//for Long
-
 }
