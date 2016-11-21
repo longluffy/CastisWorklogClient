@@ -69,7 +69,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:text="CurrentLocation" />
+            android:text="Current Location:" />
 
         <TextView
             android:id="@+id/locationText"
@@ -78,7 +78,6 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/locationLabel"
-            android:layout_marginTop="15dp"
             android:layout_weight="1"
             android:text="TextView"
             android:textAppearance="@style/TextAppearance.AppCompat.Body2"
@@ -97,6 +96,7 @@
         android:layout_marginLeft="50dp"
         android:layout_marginStart="50dp"
         android:id="@+id/btnCheckin"
+        android:background="#FF8F00"
         android:onClick="onCheckIn"/>
 
     <Button
@@ -109,6 +109,7 @@
         android:layout_marginRight="50dp"
         android:layout_marginEnd="50dp"
         android:id="@+id/btnCheckout"
+        android:background="#FF8F00"
         android:onClick="onCheckOut"/>
 
 </RelativeLayout>

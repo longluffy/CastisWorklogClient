@@ -25,7 +25,6 @@ public class EditActivity extends AppCompatActivity implements SendDatatoServer.
     Gson gsonParser = new Gson();
     private static final String TAG = "EditActivity";
     String SAVE_URL = "/ciwls/user/";
-    //        public static final String DEFAULT_SERVER = "http://192.168.105.104:8080";
     public static final String DEFAULT_SERVER = "http://110.35.173.28:8886";
     SharedPreferences sharedPref;
     SharedPreferences.Editor sharedPrefEditor;
@@ -111,8 +110,6 @@ public class EditActivity extends AppCompatActivity implements SendDatatoServer.
             signupDTO.setPassword(_passwordText.getText().toString().trim());
         }
 
-//        new HttpAsyncTask().execute(signupDTO);
-
         String jsonMessage = gsonParser.toJson(signupDTO);
         new SendDatatoServer(this).execute(String.valueOf(jsonMessage), sharedPref.getString("prefServer", DEFAULT_SERVER) + SAVE_URL+"/"+signupDTO.getId());
     }
@@ -143,13 +140,6 @@ public class EditActivity extends AppCompatActivity implements SendDatatoServer.
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        // Disable going back to the MainActivity
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
 
     public boolean validate() {
         boolean valid = true;

@@ -164,9 +164,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void onMyMapReady(GoogleMap googleMap) {
-        // Get Google Map from Fragment.
         myMap = googleMap;
-        // Sét OnMapLoadedCallback Listener.
         myMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
 
             @Override
@@ -392,15 +390,15 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
+//    @Override
+//    public void onBackPressed() {
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else {
+//            super.onBackPressed();
+//        }
+//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

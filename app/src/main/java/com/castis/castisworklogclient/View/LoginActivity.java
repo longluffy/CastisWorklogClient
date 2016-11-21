@@ -123,9 +123,6 @@ public class LoginActivity extends AppCompatActivity implements SendDatatoServer
 
         String username = _usernameText.getText().toString();
         String password = _passwordText.getText().toString();
-
-        // TODO add validate
-
         if (username.isEmpty() || username.length() < 4 || username.length() > 20) {
             _passwordText.setError("between 4 and 10 alphanumeric characters");
             valid = false;
@@ -152,18 +149,6 @@ public class LoginActivity extends AppCompatActivity implements SendDatatoServer
     public void onSettingServer(View view) {
         Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
         startActivity(intent);
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SIGNUP) {
-            if (resultCode == RESULT_OK) {
-
-                // TODO: Implement successful signup logic here
-                this.finish();
-            }
-        }
     }
 
     @Override
