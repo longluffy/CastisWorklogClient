@@ -1,6 +1,6 @@
 package com.castis.castisworklogclient.model;
 
-
+//truong test
 public class User
 {
     private Integer id;
